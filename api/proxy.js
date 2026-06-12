@@ -22,7 +22,14 @@ export default async function handler(req, res) {
     if (data.content) {
       data.content = data.content.map(block => {
         if (block.type === 'text') {
-          block.text = block.text.replace(/^```json\s*/i, '').replace(/```\s*$/g, '').trim();
+          let text = block.text.trim();
+          text = text.replace(/^```json\s*/i, '').replace(/\s*```$/g, '').trim();
+          const start = text.indexOf('{') !== -1 ? text.indexOf('{') : text.indexOf('[');
+          const end = text.lastIndexOf('}') !== -1 ? text.lastIndexOf('}') : text.lastIndexOf(']');
+          if (start !== -1 && end !== -1) {
+            text = text.substring(start, end + 1);
+          }
+          block.text = text;
         }
         return block;
       });
