@@ -27,7 +27,9 @@ export default async function handler(req, res) {
           const start = text.indexOf('{') !== -1 ? text.indexOf('{') : text.indexOf('[');
           const end = text.lastIndexOf('}') !== -1 ? text.lastIndexOf('}') : text.lastIndexOf(']');
           if (start !== -1 && end !== -1) {
-            text = text.substring(start, end + 1);
+            try {
+              block.parsed = JSON.parse(text.substring(start, end + 1));
+            } catch(e) {}
           }
           block.text = text;
         }
